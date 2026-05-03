@@ -11,11 +11,11 @@ load_dotenv()
 # db_url = os.getenv("DATABASE_URL")
 # Update these connection parameters as needed
 DB_CONFIG = {
-    'dbname': 'postgres',
-    'user': 'postgres',
-    'password': 'pawar06',
-    'host': 'localhost',
-    'port': 5432
+    'dbname': os.getenv("POSTGRES_DB"),
+    'user': os.getenv("POSTGRES_USER"),
+    'password': os.getenv("POSTGRES_PASSWORD"),
+    'host': os.getenv("POSTGRES_HOST"),
+    'port': os.getenv("POSTGRES_PORT")
 }
 
 # SQL Script for RCA Intelligence Engine
