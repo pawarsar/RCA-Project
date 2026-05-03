@@ -1,0 +1,7 @@
+pyautogen
+streamlit
+sqlalchemy
+psycopg2-binary
+python-dotenv
+pandas
+python-docx

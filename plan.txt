@@ -1,0 +1,186 @@
+✅ Project: Root Cause Analysis (RCA) Assistant
+1. Business Problem (Real‑World Framing)
+Context
+Organizations often perform RCA after incidents (missed deadlines, outages, customer complaints, operational failures).
+The problem is:
+
+Analyses are inconsistent
+Root causes are confused with symptoms
+Mitigation actions are vague
+
+Goal
+Build a multi‑agent AI assistant that guides structured RCA using reasoning, validation, and review—similar to how real post‑incident reviews are done.
+
+2. What the RCA Assistant Does
+Input
+
+Incident description (free text)
+Optional context (team, timeline, constraints)
+
+Output
+
+Clear problem statement
+Possible root causes (people / process / system)
+Contributing factors
+Corrective actions
+Preventive actions
+
+✅ No historical datasets
+✅ No automation tools
+✅ Reasoning‑first system
+
+3. Multi‑Agent Architecture
+UserProxyAgent
+      ↓
+Incident Analysis Agent
+      ↓
+Root Cause Identification Agent
+      ↓
+Mitigation & Prevention Agent
+      ↓
+Critic / Validator Agent
+      ↓
+Final RCA Report
+
+This structure alone makes the project interview‑credible.
+
+4. Agent Roles & Responsibilities
+4.1 Incident Analysis Agent
+Purpose
+Understand the incident clearly and restate it correctly.
+Tasks
+
+Identify:
+
+What happened
+When
+Who was impacted
+
+
+Separate symptoms vs problem
+
+Output
+
+Refined problem statement
+Key facts & assumptions
+
+
+4.2 Root Cause Identification Agent
+Purpose
+Identify likely root causes logically.
+Method
+
+Uses basic RCA reasoning:
+
+People
+Process
+Tools / Systems
+External factors
+
+
+
+Tasks
+
+Generate 3–5 plausible root causes
+Explain how each caused the issue
+Distinguish root cause vs contributing factor
+
+
+4.3 Mitigation & Prevention Agent
+Purpose
+Turn analysis into action.
+Tasks
+
+Corrective actions (fix now)
+Preventive actions (avoid recurrence)
+Prioritize actions by impact & effort
+
+
+4.4 Critic / Validator Agent
+Purpose
+Quality control (this upgrades your project from “demo” to “system”).
+Checks
+
+Are causes actually root causes?
+Are actions specific or vague?
+Is logic consistent end‑to‑end?
+
+Behavior
+
+Approves OR requests revision once
+
+
+5. End‑to‑End Workflow
+
+User submits an incident description
+Incident Analysis Agent clarifies the problem
+Root Cause Agent proposes causes
+Mitigation Agent suggests actions
+Critic Agent validates the analysis
+Final structured RCA report is returned
+
+✅ Deterministic termination
+✅ No infinite loops
+✅ Clean separation of reasoning stages
+
+6. Sample Data to Use (Ready‑Made)
+You can hardcode 5–7 incident scenarios like below.
+Sample Incident 1: Operations
+Plain TextA client deliverable was submitted 3 days late.The team cited last-minute scope changes and dependency delays.The delay caused client dissatisfaction and escalation.Show more lines
+Sample Incident 2: HR / People
+Plain TextA new employee resigned within 2 months, citing unclear expectations,lack of feedback, and workload pressure.Show more lines
+Sample Incident 3: Customer Support
+Plain TextCustomer complaints increased significantly over two weeks due toslow response times and repeated ticket handoffs.Show more lines
+Sample Incident 4: Business Process
+Plain TextQuarterly financial reports were published with errors, requiringa public correction and internal rework.Show more lines
+Sample Incident 5: Training Failure
+Plain TextA newly launched internal tool saw low adoption despite training sessions,leading to manual workarounds and productivity loss.Show more lines
+These are:
+
+Realistic
+Domain‑agnostic
+Enough to demonstrate robustness
+
+
+7. Example Final Output Format (Very Important)
+Your assistant should output something like:
+RCA Report
+Problem Statement
+
+Client deliverable was delayed due to unresolved upstream dependencies and late scope alignment.
+
+Root Causes
+
+Lack of formal change‑control process
+Dependencies not tracked centrally
+Escalation triggers unclear
+
+Contributing Factors
+
+Resource overallocation
+Inadequate buffer planning
+
+Corrective Actions
+
+Immediate dependency review meetings
+Client communication protocol
+
+Preventive Actions
+
+Change‑control checklist
+Milestone dependency tracking
+
+Validation Notes
+
+Root causes focus on process, not individuals
+
+This structure is gold for interviews.
+
+8. What You Deliver (Portfolio Checklist ✅)
+You should have:
+
+✅ RCA Assistant architecture diagram
+✅ Agent responsibility definitions
+✅ 5–7 sample incident runs
+✅ One polished README
+✅ Explanation of why multi‑agent > single LLM

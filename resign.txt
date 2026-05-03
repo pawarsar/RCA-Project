@@ -1,0 +1,246 @@
+---
+
+# Final Root Cause Analysis (RCA) Report
+
+---
+
+## 1. Incident Summary
+
+A newly hired employee resigned within their first 2 months. They cited:
+- Unclear expectations
+- Lack of feedback
+- Workload pressure
+
+Impacts:
+- Loss of capacity and continuity for the team
+- Re-hiring cost and time for the manager and HR
+- Negative signal for early-tenure employee experience and employer brand
+
+---
+
+## 2. Problem Statement
+
+Within two months of joining, a new employee resigned, reporting unclear role expectations, insufficient feedback, and high workload pressure. This early attrition indicates systemic weaknesses in how the organization defines roles, onboards new hires, manages early-tenure feedback, and calibrates workload for new employees.
+
+---
+
+## 3. Symptoms vs. Underlying Problem
+
+### Symptoms (Employee’s Experience)
+- Did not know clearly what success looked like in the role.
+- Did not receive regular, actionable feedback.
+- Felt overwhelmed by workload and/or complexity of tasks.
+
+### Underlying Problem
+The organization lacks:
+- A structured, role-specific onboarding and expectation-setting process.
+- A required cadence for early-tenure feedback and check-ins.
+- A realistic ramp-up plan and workload calibration for new hires.
+- Organizational standards and monitoring for new-hire experience and early attrition.
+
+These systemic gaps created an environment where the employee experienced high pressure with low clarity and low support, leading to resignation.
+
+---
+
+## 4. Root Cause Analysis
+
+### Method Used
+- “5 Whys” on each symptom
+- Categorization by People, Process, Tools/Systems, External Factors
+- Distinction between root causes (structural drivers) and contributing factors (amplifiers)
+
+---
+
+## 5. Root Causes (Primary, Structural)
+
+### Root Cause 1 – Process: No standardized, role-specific onboarding and expectation-setting
+
+**What it is**  
+There is no consistent, documented onboarding framework for this role (e.g., no 30/60/90-day plan, no written success criteria, no clear early priorities).
+
+**How it led to the incident**
+- The employee never received a concrete, written understanding of:
+  - Key responsibilities and priorities in the first 2–3 months.
+  - What “good performance” looks like.
+  - How they would be evaluated.
+- This directly produced the “unclear expectations” symptom and forced the manager to improvise onboarding, increasing inconsistency and gaps.
+
+**Why this is a root cause**
+Even if the manager were busy or imperfect, a robust, standardized onboarding process would have:
+- Provided baseline clarity and structure.
+- Reduced ambiguity for the new hire.
+- Given the manager a clear framework to follow.
+
+The absence of such a process is a design flaw in how new employees are integrated, not just a one-off oversight.
+
+---
+
+### Root Cause 2 – Process + People: No required cadence or standard for early-tenure feedback and check-ins
+
+**What it is**  
+The organization does not enforce or strongly guide:
+- Weekly or regular 1:1s with new hires.
+- Formal 30/60/90-day check-ins focused on performance, expectations, and support.
+
+**How it led to the incident**
+- The manager did not consistently hold structured feedback conversations.
+- The employee:
+  - Did not know if they were meeting expectations.
+  - Had no predictable forum to raise concerns about workload or confusion.
+- This directly caused the “lack of feedback” symptom and allowed unclear expectations and workload issues to persist unaddressed.
+
+**Why this is a root cause**
+If a clear, enforced feedback cadence existed:
+- The manager would have been prompted to clarify expectations and provide guidance.
+- The employee’s stress and confusion could have been surfaced and mitigated early.
+
+The systemic absence of a feedback/check-in standard is a core design issue in how new hires are managed.
+
+---
+
+### Root Cause 3 – Process: Role and workload not calibrated for a new hire; no structured ramp-up plan
+
+**What it is**  
+The role’s workload and complexity were not adjusted for a new employee’s learning curve, and there was no documented ramp-up plan (e.g., staged responsibilities over the first 90 days).
+
+**How it led to the incident**
+- The new hire likely received:
+  - A workload similar to fully ramped peers, or
+  - Complex tasks without sufficient time and support to learn.
+- Without a phased ramp-up, the employee experienced sustained workload pressure and stress.
+- Combined with unclear expectations and lack of feedback, this created a high-pressure, low-support environment that made resignation a rational choice.
+
+**Why this is a root cause**
+Even with good communication, an inherently unrealistic workload for a new hire would still cause strain. The lack of a ramp-up design is a structural issue in role design and capacity planning, directly causing the “workload pressure” symptom.
+
+---
+
+### Root Cause 4 – Systemic/Organizational: Lack of standards and accountability for new-hire experience and early attrition
+
+**What it is**  
+At the organizational level, there are no clear, enforced standards for:
+- Onboarding quality and content.
+- Early-tenure feedback cadence.
+- Workload ramp-up for new hires.
+
+There is also limited monitoring of:
+- New-hire experience (e.g., 30/60/90-day pulse checks).
+- Early-tenure attrition, with no clear accountability at manager/department level.
+
+**How it led to the incident**
+- Without organizational standards:
+  - Managers can onboard informally and inconsistently.
+  - HR and leadership lack early warning signals (no surveys, no metrics).
+- The employee’s dissatisfaction remained invisible until resignation.
+- This environment allowed the combination of unclear expectations, lack of feedback, and workload pressure to persist.
+
+**Why this is a root cause**
+This systemic gap is the “soil” in which the other process failures grew. If strong standards, monitoring, and accountability existed, local issues in onboarding, feedback, and workload would likely have been prevented or corrected quickly.
+
+---
+
+## 6. Contributing Factors (Secondary, Amplifiers)
+
+These factors worsened the situation but are not the primary structural drivers.
+
+### Contributing Factor A – People: Manager’s skill, bandwidth, or prioritization
+
+- The manager may have had:
+  - Limited experience with onboarding/coaching.
+  - High personal workload, reducing time for 1:1s and feedback.
+  - Underestimation of the importance of structured support in the first 60 days.
+- This reduced the frequency and quality of feedback and proactive clarification of expectations.
+- It amplified the impact of weak processes but did not create the structural gaps.
+
+---
+
+### Contributing Factor B – Process/People: Possible mismatch between job description and actual role
+
+- The job as advertised may not have fully matched:
+  - Actual day-to-day tasks.
+  - Real workload intensity.
+  - Level of ambiguity/autonomy required.
+- This increased the gap between the employee’s expectations and reality, intensifying perceptions of unclear expectations and unfair workload.
+- However, even with a perfect job description, the lack of onboarding, feedback cadence, and ramp-up would still cause problems.
+
+---
+
+### Contributing Factor C – Tools/Systems: Lack of supporting tools for onboarding and feedback
+
+- No standardized onboarding templates in HR systems.
+- No automated reminders for 30/60/90-day check-ins.
+- No simple mechanism for new hires to give early feedback or flag concerns.
+- This made it easier for managers to forget or de-prioritize check-ins and reduced visibility of new-hire experience to HR/leadership.
+- Tools would support and enforce good processes but cannot substitute for them; the root issue is process and standards.
+
+---
+
+### Contributing Factor D – External: Market conditions or personal circumstances
+
+- Strong job market or personal factors (commute, family, other offers) may have lowered the threshold for resignation.
+- These did not create the internal issues but made it easier for the employee to act on dissatisfaction.
+
+---
+
+## 7. Logical Chain from Root Causes to Resignation
+
+1. **Organizational standards and accountability are weak (Root Cause 4)**  
+   → No enforced requirements for onboarding, feedback cadence, or ramp-up.
+
+2. **As a result, there is no standardized, role-specific onboarding (Root Cause 1)**  
+   → The employee starts without clear written expectations or success criteria.
+
+3. **There is also no required feedback/check-in cadence (Root Cause 2)**  
+   → The manager does not consistently provide feedback or a safe forum for concerns.
+
+4. **Role/workload is not calibrated for a new hire (Root Cause 3)**  
+   → The employee faces a workload and complexity level similar to fully ramped peers.
+
+5. **Contributing factors (manager skill/bandwidth, JD mismatch, lack of tools, external options)**  
+   → Intensify the employee’s experience of:
+   - Unclear expectations
+   - Lack of feedback
+   - Workload pressure
+
+6. **Combined effect**  
+   → High pressure + low clarity + low support in the first 2 months  
+   → Employee concludes the environment is not sustainable or supportive  
+   → Resignation within 60 days.
+
+---
+
+## 8. Corrective and Preventive Actions (Summary)
+
+The mitigation plan is logically aligned with the root causes and is specific and actionable:
+
+### Directly Addressing Root Causes
+
+1. **Standardized 30/60/90-Day Onboarding & Expectations Template**  
+   - Clarifies responsibilities, success criteria, and phased workload ramp-up.  
+   - Owner: HR + Managers; Timeline: within 4 weeks.
+
+2. **Mandatory Weekly 1:1s for First 90 Days**  
+   - Creates a feedback cadence and forum for raising issues early.  
+   - Owner: Department Heads + HR; Effective immediately.
+
+3. **Immediate Workload Review for Current New Hires**  
+   - Corrects miscalibrated workload and clarifies what is not yet expected.  
+   - Owner: Managers; Timeline: within 2 weeks.
+
+4. **Define Organizational Standards for New-Hire Experience**  
+   - Codifies minimum expectations for onboarding, feedback, ramp-up, and early performance conversations.  
+   - Owner: HR Director + Executive Sponsor; Timeline: within 3 months.
+
+5. **30/60/90-Day New-Hire Pulse Surveys & Early-Tenure Attrition Metrics**  
+   - Introduce monitoring and accountability for early-tenure experience and turnover.  
+   - Owner: HR Analytics / People Ops; Timeline: 2–6 months.
+
+6. **Manager Training on Onboarding, Feedback, and Workload Management**  
+   - Addresses the people-side capability gap and supports process adherence.  
+   - Owner: L&D / HR; Timeline: within 3 months.
+
+---
+
+## 9. Conclusion
+
+The employee’s resignation within two months is not primarily a result of individual failure but of systemic design issues in onboarding, feedback, and workload management, enabled by weak organizational standards and monitoring. The identified root causes are structural, and the proposed actions are specific, targeted, and logically connected to those causes. Implementing these measures should materially reduce the likelihood of similar early-tenure resignations in the future.
