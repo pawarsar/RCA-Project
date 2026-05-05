@@ -2,6 +2,8 @@ import autogen
 import os
 from dotenv import load_dotenv
 from database import save_agent_output, save_system_prompt
+from duckduckgo_search import DDGS
+import json
 
 load_dotenv()
 
@@ -23,24 +25,32 @@ llm_config = {
 
 # 1. Incident Analysis Agent
 analyst_system_message = """
-You are an Incident Analysis Agent. 
-Your goal is to understand the incident clearly and restate it correctly.
-Tasks:
-1. Identify: What happened, When, Who was impacted.
-2. Separate symptoms from the actual problem.
-Output: A refined problem statement and key facts/assumptions.
-Keep it structured and professional.
+You are an expert Incident Analysis Agent. 
+Your goal is to parse incident reports and extract the technical essence without fluff.
+
+**STRICT OUTPUT FORMAT**:
+1. **Actual Problem**: A single, precise sentence describing the core failure.
+2. **Symptoms**: A bulleted list of observed behaviors that led to the discovery.
+3. **Timeline**: Key timestamps (if available).
+
+Behavior: Be direct. Do not add introductory sentences like "Based on my analysis...".
 """
 
 # 2. Root Cause Identification Agent
 identifier_system_message = """
-You are a Root Cause Identification Agent.
-Your goal is to identify likely root causes logically using People, Process, Tools/Systems, and External factors.
-Tasks:
-1. Generate 3–5 plausible root causes.
-2. Explain how each caused the issue.
-3. Distinguish between a root cause and a contributing factor.
-Output: A structured list of root causes and contributing factors.
+You are a Senior Root Cause Identification Agent. 
+Your goal is to identify the **DEEP** technical and process-level root causes.
+
+**Guidelines**:
+- Focus strictly on "Confirmed Root Causes".
+- Avoid generic causes like "human error" unless explained by a process failure.
+- Use the **5-Whys** approach internally but only output the final, confirmed findings.
+
+**STRICT OUTPUT FORMAT**:
+- **Confirmed Root Causes**: A structured list explaining the "Why" behind the "How".
+- **Contributing Factors**: Secondary issues that exacerbated the incident.
+
+Keep it clinical and precise. No fluff.
 """
 
 # 3. Mitigation & Prevention Agent
@@ -56,16 +66,39 @@ Output: A prioritized action plan with clear owners and timelines (hypothetical)
 
 # 4. Critic / Validator Agent
 validator_system_message = """
-You are a Critic / Validator Agent.
-Your goal is quality control.
-Checks:
-1. Are the identified causes actually root causes?
-2. Are actions specific or vague?
-3. Is the logic consistent end-to-end?
-Behavior:
-- If quality is high, output 'TERMINATE' and provide the Final RCA Report.
-- If not, request a specific revision from the relevant agent.
+You are the Lead RCA Validator. 
+Your goal is to synthesize the final report into a masterpiece of precision.
+
+**Report Requirements**:
+1. **Title**: Professional incident name.
+2. **Executive Summary**: 2-3 sentences max.
+3. **Actual Problem vs Symptoms**: Clearly defined.
+4. **Confirmed Root Causes**: The core findings.
+5. **Action Plan**: Immediate and Long-term.
+6. **Mermaid Diagram**: Visual representation.
+
+**STRICT INSTRUCTION**: 
+Remove all conversational filler. No "Great work everyone", no "I agree with...". 
+The final output must be a professional document ready for C-level review.
+
+**MANDATORY**: Include a Mermaid.js diagram in your final report.
+```mermaid
+graph TD
+    A[Incident] --> B[Root Cause]
+    B --> C[Action Item]
+```
+
+Output the report and end with 'TERMINATE'.
 """
+
+def search_tool(query: str) -> str:
+    """Search the web for information using DuckDuckGo."""
+    try:
+        with DDGS() as ddgs:
+            results = [r for r in ddgs.text(query, max_results=3)]
+            return json.dumps(results)
+    except Exception as e:
+        return f"Search failed: {str(e)}"
 
 def get_agents(session_id, progress_cb=None):
     user_proxy = autogen.UserProxyAgent(
@@ -124,6 +157,15 @@ def get_agents(session_id, progress_cb=None):
 def run_rca_workflow(incident_desc, session_id, progress_cb=None):
     user_proxy, agents = get_agents(session_id, progress_cb)
     
+    # Register tools for the Identifier agent
+    autogen.agentchat.register_function(
+        search_tool,
+        caller=agents[1], # Root_Cause_Identifier
+        executor=user_proxy,
+        name="web_search",
+        description="Search the web for incident context or root cause information."
+    )
+    
     groupchat = autogen.GroupChat(
         agents=[user_proxy] + agents,
         messages=[],
@@ -133,9 +175,30 @@ def run_rca_workflow(incident_desc, session_id, progress_cb=None):
     
     manager = autogen.GroupChatManager(groupchat=groupchat, llm_config=llm_config)
     
-    user_proxy.initiate_chat(
+    chat_res = user_proxy.initiate_chat(
         manager,
         message=f"Please perform a complete Root Cause Analysis for this incident: {incident_desc}"
     )
     
-    return groupchat.messages
+    # Extract token usage and cost from ALL agents in the group chat
+    total_tokens = 0
+    total_cost = 0.0
+    
+    for agent in [user_proxy] + agents:
+        if hasattr(agent, 'client_cache') and agent.client_cache:
+            # Note: Some versions use different internal structures for usage
+            pass 
+        
+        # Most reliable way in modern AutoGen:
+        if hasattr(agent, 'previous_usage_summary') and agent.previous_usage_summary:
+            total_tokens += agent.previous_usage_summary.get('total_tokens', 0)
+            total_cost += agent.previous_usage_summary.get('total_cost', 0.0)
+            
+    # If the summary is empty, check the chat_res as a fallback
+    if total_tokens == 0:
+        if hasattr(chat_res, 'cost'):
+            total_cost = chat_res.cost.get('total_cost', 0.0)
+        if hasattr(chat_res, 'usage'):
+            total_tokens = chat_res.usage.get('total_tokens', 0)
+        
+    return groupchat.messages, total_tokens, total_cost

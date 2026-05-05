@@ -4,6 +4,9 @@ from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, F
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
+import logging
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -32,6 +35,16 @@ engine = create_engine(
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+class User(Base):
+    __tablename__ = "users"
+    __table_args__ = {"schema": "rca_db"}
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(100), unique=True, index=True)
+    email = Column(String(255), unique=True, index=True)
+    password_hash = Column(Text)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
 class AgentOutput(Base):
     __tablename__ = "agent_outputs"
     __table_args__ = {"schema": "rca_db"}
@@ -57,12 +70,22 @@ class FinalReport(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     session_id = Column(String(100), index=True, unique=True)
+    user_id = Column(Integer, ForeignKey("rca_db.users.id"))
     incident_description = Column(Text)
     final_report = Column(Text)
+    root_cause_category = Column(String(100))
+    rating = Column(Integer)
+    total_tokens = Column(Integer, default=0)
+    estimated_cost = Column(Text) # Use String/Text for cost if precision is handled elsewhere
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
 
 def init_db():
-    Base.metadata.create_all(bind=engine)
+    try:
+        Base.metadata.create_all(bind=engine)
+        logger.info("Database tables created successfully.")
+    except Exception as e:
+        logger.error(f"Error creating tables: {str(e)}")
+        raise
 
 def save_agent_output(session_id, agent_name, content):
     db = SessionLocal()
@@ -91,15 +114,46 @@ def save_system_prompt(agent_name, prompt_text):
     finally:
         db.close()
 
-def save_final_report(session_id, incident_description, final_report):
+def save_final_report(session_id, incident_description, final_report, user_id=None, tokens=0, cost=0.0):
     db = SessionLocal()
     try:
         report = FinalReport(
             session_id=session_id,
+            user_id=user_id,
             incident_description=incident_description,
-            final_report=final_report
+            final_report=final_report,
+            total_tokens=tokens,
+            estimated_cost=str(cost)
         )
         db.add(report)
         db.commit()
+    finally:
+        db.close()
+
+def update_report_rating(session_id, rating):
+    db = SessionLocal()
+    try:
+        report = db.query(FinalReport).filter(FinalReport.session_id == session_id).first()
+        if report:
+            report.rating = rating
+            db.commit()
+    finally:
+        db.close()
+
+def get_user_by_username(username):
+    db = SessionLocal()
+    try:
+        return db.query(User).filter(User.username == username).first()
+    finally:
+        db.close()
+
+def create_user(username, email, password_hash):
+    db = SessionLocal()
+    try:
+        new_user = User(username=username, email=email, password_hash=password_hash)
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        return new_user
     finally:
         db.close()
