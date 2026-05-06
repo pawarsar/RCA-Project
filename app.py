@@ -55,6 +55,11 @@ def render_report_sections(content):
             #     st.markdown(rc_match.group(1).strip())
         content = content.replace(rc_match.group(0), "")
 
+    # Clean up Mermaid diagram from the content so it doesn't appear as text
+    mermaid_pattern = r"```mermaid\n(.*?)\n```"
+    content = re.sub(mermaid_pattern, "", content, flags=re.DOTALL)
+    content = re.sub(r'#+\s*\d*\.*\s*.*[Mm]ermaid.*?\n', "", content, flags=re.IGNORECASE)
+
     # 3. Remaining sections in standard expanders
     st.markdown("### 📋 Additional Details")
     sections = re.split(r'\n(?=##\s\d+\.\s.+|##\s.+|#\s.+)', content, flags=re.MULTILINE)
@@ -77,33 +82,6 @@ def render_report_sections(content):
                 """, unsafe_allow_html=True)
                 logger.info(f"Section: {clean_title}\n###################\n")
                 logger.info(body)
-    # Extract Mermaid diagram if exists
-    mermaid_pattern = r"```mermaid\n(.*?)\n```"
-    mermaid_match = re.search(mermaid_pattern, content, re.DOTALL)
-    
-    if mermaid_match:
-        mermaid_code = mermaid_match.group(1).strip()
-        st.subheader("📊 Download Root Cause Visualizer")
-        
-        try:
-            encoded_mermaid = base64.b64encode(mermaid_code.encode('utf-8')).decode('utf-8')
-            image_url = f"https://mermaid.ink/img/{encoded_mermaid}"
-            # st.image(image_url, caption="Root Cause Flow Diagram", use_container_width=True)
-            
-            img_resp = requests.get(image_url)
-            if img_resp.status_code == 200:
-                st.download_button(
-                    label="📥 Download Flow",
-                    data=img_resp.content,
-                    file_name="rca_flow_diagram.png",
-                    mime="image/png",
-                    key=f"dl_app_{uuid.uuid4().hex[:8]}"
-                )
-        except Exception as e:
-            st.error(f"Error generating diagram: {str(e)}")
-        
-        content = re.sub(mermaid_pattern, "", content, flags=re.DOTALL)
-        content = re.sub(r'#+\s*\d*\.*\s*.*[Mm]ermaid.*?\n', "", content)
 
 
 def create_docx(content):
@@ -385,23 +363,51 @@ if "final_report" in st.session_state:
             render_report_sections(st.session_state.final_report)
         
         st.markdown("<br>", unsafe_allow_html=True)
-        _, col_md, col_docx = st.columns([5, 1, 1])
-        # with col_md:
-        #     st.download_button(
-        #         label="Download Markdown",
-        #         data=st.session_state.final_report,
-        #         file_name=f"RCA_Report_{st.session_state.session_id}.md",
-        #         mime="text/markdown"
-        #     )
+        
+        # Check for Mermaid diagram
+        mermaid_pattern = r"```mermaid\n(.*?)\n```"
+        mermaid_match = re.search(mermaid_pattern, st.session_state.final_report, re.DOTALL)
+        
+        flow_data = None
+        if mermaid_match:
+            mermaid_code = mermaid_match.group(1).strip()
+            try:
+                encoded_mermaid = base64.b64encode(mermaid_code.encode('utf-8')).decode('utf-8')
+                image_url = f"https://mermaid.ink/img/{encoded_mermaid}"
+                img_resp = requests.get(image_url)
+                if img_resp.status_code == 200:
+                    flow_data = img_resp.content
+            except Exception as e:
+                logger.error(f"Error generating diagram: {str(e)}")
+
+        # Clean docx content
+        docx_content = re.sub(mermaid_pattern, "", st.session_state.final_report, flags=re.DOTALL)
+        docx_content = re.sub(r'#+\s*\d*\.*\s*.*[Mm]ermaid.*?\n', "", docx_content, flags=re.IGNORECASE)
+
+        _, col_flow, col_docx = st.columns([5, 1, 1])
+        
+        with col_flow:
+            if flow_data:
+                st.download_button(
+                    label="📥 Download Flow",
+                    data=flow_data,
+                    file_name=f"RCA_Flow_{st.session_state.session_id}.png",
+                    mime="image/png",
+                    use_container_width=True,
+                    key=f"flow_dl_{st.session_state.session_id}"
+                )
+                
         with col_docx:
             try:
-                docx_data = create_docx(st.session_state.final_report)
+                docx_data = create_docx(docx_content)
                 logger.info("DOCX file generated for download.")
                 st.download_button(
-                    label="Download",
+                    label="📄 Download DOCX",
                     data=docx_data,
                     file_name=f"RCA_Report_{st.session_state.session_id}.docx",
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    use_container_width=True,
+                    key=f"docx_dl_{st.session_state.session_id}"
                 )
             except Exception as e:
                 logger.error(f"Failed to generate DOCX: {str(e)}")
